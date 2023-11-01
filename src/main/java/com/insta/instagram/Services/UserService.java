@@ -1,5 +1,6 @@
 package com.insta.instagram.Services;
 
+import com.insta.instagram.Model.Post;
 import com.insta.instagram.Model.User;
 import com.insta.instagram.Model.dto.Credential;
 import com.insta.instagram.Repositroy.UserRepo;
@@ -8,11 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Service
 public class UserService {
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    PostService postService;
 
     public String SignUp(User user) throws NoSuchAlgorithmException {
 
@@ -50,5 +55,23 @@ public class UserService {
             return "Please signIn first";
         }
         return "User Signed out successfully";
+    }
+
+    public String CreatePost(Post post, String email) {
+        User user = userRepo.findByUserEmail(email);
+        if(user.getStatus().equals("login")) {
+            User postOwner = userRepo.findByUserEmail(email);
+            post.setPostOwner(postOwner);
+            postOwner.setTotal(postOwner.getTotal() + 1);
+            postService.CreatePost(post);
+        }else {
+            return "Please signIn first";
+        }
+        return "Post Upload Successfully";
+    }
+
+    public List<Post> ShowPost(String email) {
+//        User postOwner = userRepo.findByUserEmail(email);
+        return postService.ShowPost(email);
     }
 }

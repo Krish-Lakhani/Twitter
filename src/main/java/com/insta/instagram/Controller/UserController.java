@@ -1,12 +1,15 @@
 package com.insta.instagram.Controller;
 
+import com.insta.instagram.Model.Post;
 import com.insta.instagram.Model.User;
 import com.insta.instagram.Model.dto.Credential;
+import com.insta.instagram.Services.PostService;
 import com.insta.instagram.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/User")
@@ -28,5 +31,16 @@ public class UserController {
     private String SignOut(@RequestParam String email) throws NoSuchAlgorithmException{
         return userService.SignOut(email);
     }
+
+    @PostMapping("Post")
+    private String CreatePost(@RequestBody Post post, @RequestParam String email){
+        return userService.CreatePost(post,email);
+    }
+
+    @GetMapping("/ShowPost/{email}")
+    public List<Post> showPost(@PathVariable String email) {
+        return userService.ShowPost(email);
+    }
+
 
 }

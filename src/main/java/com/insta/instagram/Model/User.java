@@ -28,5 +28,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
+
     private String status;
+
+    private int total=0;
 }
