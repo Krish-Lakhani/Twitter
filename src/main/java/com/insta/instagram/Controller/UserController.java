@@ -24,5 +24,9 @@ public class UserController {
     private String SignIn(@RequestBody Credential credential) throws NoSuchAlgorithmException {
         return userService.SignIn(credential);
     }
+    @GetMapping("SignOut")
+    private String SignOut(@RequestParam String email) throws NoSuchAlgorithmException{
+        return userService.SignOut(email);
+    }
 
 }

@@ -33,9 +33,22 @@ public class UserService {
         User user = userRepo.findByUserEmail(credential.getEmail());
 
         if (hashPass.equals(user.getUserPassword())) {
+            user.setStatus("login");
+            userRepo.save(user);
             return "login";
         } else {
             return "Credential MisMatch";
         }
+    }
+
+    public String SignOut(String email) {
+        User user = userRepo.findByUserEmail(email);
+        if(user.getStatus().equals("login")){
+            user.setStatus("logout");
+            userRepo.save(user);
+        }else {
+            return "Please signIn first";
+        }
+        return "User Signed out successfully";
     }
 }
