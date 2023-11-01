@@ -16,16 +16,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userid;
     private String userName;
-    private String userHandle;
     private String userBio;
 
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")
     @Column(unique = true)
     private String userEmail;
-
     @NotBlank
     private String userPassword;
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
