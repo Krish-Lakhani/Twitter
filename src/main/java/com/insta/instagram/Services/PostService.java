@@ -20,12 +20,21 @@ public class PostService {
         return postRepo.save(post);
     }
 
-    public List<PostDto> showPost(User user) {
-        return postRepo.getPostsByPostOwner(user);
+//    public List<PostDto> showPost(User user) {
+//        return postRepo.getPostsByPostOwner(user);
+//    }
+
+    public List<Post> ShowPost(String userEmail) {
+        return postRepo.findByPostOwnerUserEmail(userEmail);
     }
 
-
-//    public List<Post> ShowPost(String userEmail) {
-//        return postRepo.findByPostOwnerUserEmail(userEmail);
-//    }
+    public String deletePost(Integer postId, User user) {
+        Post post = postRepo.findById(postId).orElse(null);
+        if(post != null && post.getPostOwner().equals(user)){
+            postRepo.deleteById(postId);
+        } else if (post == null) {
+            return "Post does not exist";
+        }
+        return "Removed successfully";
+    }
 }

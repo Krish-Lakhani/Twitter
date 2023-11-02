@@ -71,14 +71,25 @@ public class UserService {
         return "Post Upload Successfully";
     }
 
-    public List<PostDto> showPost(String email) {
-        User user = userRepo.findByUserEmail(email);
-        user.setUserName(user.getUserName());
-        return postService.showPost(user);
+//    public List<PostDto> showPost(String email) {
+//        User user = userRepo.findByUserEmail(email);
+//        user.setUserName(user.getUserName());
+//        return postService.showPost(user);
+//    }
+
+    public List<Post> ShowPost(String email) {
+        User postOwner = userRepo.findByUserEmail(email);
+        return postService.ShowPost(email);
     }
 
-//    public List<Post> ShowPost(String email) {
-//        User postOwner = userRepo.findByUserEmail(email);
-//        return postService.ShowPost(email);
-//    }
+    public String deletePost(Integer postId, String email) {
+        User user = userRepo.findByUserEmail(email);
+        if(user.getStatus().equals("login") && user.getTotal() > 0){
+            user.setTotal(user.getTotal() - 1);
+            postService.deletePost(postId,user);
+        }else {
+            return "Please signIn first";
+        }
+        return "Post Deleted Successfully";
+    }
 }

@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("User")
 //@Tag(name = "Greeting", description = "Endpoints for greeting messages")
 public class UserController {
     @Autowired
@@ -28,22 +28,29 @@ public class UserController {
     private String SignIn(@RequestBody Credential credential) throws NoSuchAlgorithmException {
         return userService.SignIn(credential);
     }
+
     @GetMapping("SignOut")
-    private String SignOut(@RequestParam String email) throws NoSuchAlgorithmException{
+    private String SignOut(@RequestParam String email) throws NoSuchAlgorithmException {
         return userService.SignOut(email);
     }
 
     @PostMapping("Post")
-    private String CreatePost(@RequestBody Post post, @RequestParam String email){
-        return userService.CreatePost(post,email);
+    private String CreatePost(@RequestBody Post post, @RequestParam String email) {
+        return userService.CreatePost(post, email);
     }
 
-//    @GetMapping("/ShowPost/{email}")
-//    public List<Post> showPost(@PathVariable String email) {
-//        return userService.ShowPost(email);
-//    }
-    @GetMapping("/showPost/{email}")
-    private List<PostDto> showPost(@PathVariable String email){
-        return userService.showPost(email);
+    @GetMapping("/ShowPost/{email}")
+    public List<Post> showPost(@PathVariable String email) {
+        return userService.ShowPost(email);
     }
+
+    //    @GetMapping("/showPost/{email}")
+//    private List<PostDto> showPost(@PathVariable String email){
+//        return userService.showPost(email);
+//    }
+    @DeleteMapping("deletePost")
+    public String deletePost(@RequestParam Integer postId, @RequestParam String email) {
+        return userService.deletePost(postId, email);
+    }
+
 }
