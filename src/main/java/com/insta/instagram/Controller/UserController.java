@@ -1,5 +1,6 @@
 package com.insta.instagram.Controller;
 
+import com.insta.instagram.Model.Like;
 import com.insta.instagram.Model.Post;
 import com.insta.instagram.Model.User;
 import com.insta.instagram.Model.dto.Credential;
@@ -53,4 +54,8 @@ public class UserController {
         return userService.deletePost(postId, email);
     }
 
+        @PostMapping("like")
+    private String addLike(@RequestBody Like like,@RequestParam String likeEmail){
+        return userService.addLike(like,likeEmail);
+    }
 }

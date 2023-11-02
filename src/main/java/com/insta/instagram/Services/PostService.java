@@ -30,11 +30,14 @@ public class PostService {
 
     public String deletePost(Integer postId, User user) {
         Post post = postRepo.findById(postId).orElse(null);
-        if(post != null && post.getPostOwner().equals(user)){
+        if (post != null && post.getPostOwner().equals(user)) {
             postRepo.deleteById(postId);
-        } else if (post == null) {
-            return "Post does not exist";
+            return "Removed successfully";
         }
-        return "Removed successfully";
+        return "Post does not exist";
+    }
+
+    public boolean validatePost(Post twitterPost) {
+        return (twitterPost != null && postRepo.existsById(twitterPost.getPostId()));
     }
 }

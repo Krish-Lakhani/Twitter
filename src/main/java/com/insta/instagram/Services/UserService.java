@@ -1,5 +1,6 @@
 package com.insta.instagram.Services;
 
+import com.insta.instagram.Model.Like;
 import com.insta.instagram.Model.Post;
 import com.insta.instagram.Model.User;
 import com.insta.instagram.Model.dto.Credential;
@@ -19,6 +20,9 @@ public class UserService {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    LikeService likeService;
 
     public String SignUp(User user) throws NoSuchAlgorithmException {
 
@@ -91,5 +95,23 @@ public class UserService {
             return "Please signIn first";
         }
         return "Post Deleted Successfully";
+    }
+
+
+    public String addLike(Like like, String likeEmail) {
+        Post twitterPost = like.getTwitterPost();
+        boolean postValid = postService.validatePost(twitterPost);
+
+        if (postValid) {
+            User liker = userRepo.findByUserEmail(likeEmail);
+            if (likeService.isLikeAllowedOnThisPost(twitterPost, liker)) {
+                like.setLiker(liker);
+                return likeService.addLike(like);
+            } else {
+                return "Already Liked!!";
+            }
+        } else {
+            return "Cannot like on Invalid Post!!";
+        }
     }
 }
