@@ -10,7 +10,5 @@ import java.util.List;
 
 @Repository
 public interface LikeRepo extends JpaRepository<Like,Integer> {
-
-
     List<Like> findByTwitterPostAndLiker(Post twitterPost, User liker);
 }

@@ -54,8 +54,8 @@ public class UserController {
         return userService.deletePost(postId, email);
     }
 
-        @PostMapping("like")
-    private String addLike(@RequestBody Like like,@RequestParam String likeEmail){
-        return userService.addLike(like,likeEmail);
+    @PostMapping("like")
+    private String addLike(@RequestBody Like like, @RequestParam String likeEmail) {
+        return userService.addLike(like, likeEmail);
     }
 }

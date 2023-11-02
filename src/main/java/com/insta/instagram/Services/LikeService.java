@@ -15,7 +15,6 @@ public class LikeService {
 
     @Autowired
     LikeRepo likeRepo;
-
     public boolean isLikeAllowedOnThisPost(Post twitterPost, User liker) {
         List<Like> likeList = likeRepo.findByTwitterPostAndLiker(twitterPost,liker);
         return likeList != null && likeList.isEmpty();
@@ -24,6 +23,5 @@ public class LikeService {
     public String addLike(Like like) {
         likeRepo.save(like);
         return "Twitter post liked successfully!!!";
-
     }
 }

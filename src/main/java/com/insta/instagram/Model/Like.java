@@ -17,4 +17,5 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "fk_like_id")
     private User liker;
+
 }
