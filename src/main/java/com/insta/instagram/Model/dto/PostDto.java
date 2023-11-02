@@ -7,7 +7,6 @@ public class PostDto {
     public String title;
     public String description;
     public String url;
-    String formattedTime;
-
+    public String formattedTime;
     private String userName;
 }

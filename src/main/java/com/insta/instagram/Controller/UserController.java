@@ -3,6 +3,7 @@ package com.insta.instagram.Controller;
 import com.insta.instagram.Model.Post;
 import com.insta.instagram.Model.User;
 import com.insta.instagram.Model.dto.Credential;
+import com.insta.instagram.Model.dto.PostDto;
 import com.insta.instagram.Services.PostService;
 import com.insta.instagram.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,12 @@ public class UserController {
         return userService.CreatePost(post,email);
     }
 
-    @GetMapping("/ShowPost/{email}")
-    public List<Post> showPost(@PathVariable String email) {
-        return userService.ShowPost(email);
+//    @GetMapping("/ShowPost/{email}")
+//    public List<Post> showPost(@PathVariable String email) {
+//        return userService.ShowPost(email);
+//    }
+    @GetMapping("/showPost/{email}")
+    private List<PostDto> showPost(@PathVariable String email){
+        return userService.showPost(email);
     }
-
-
 }

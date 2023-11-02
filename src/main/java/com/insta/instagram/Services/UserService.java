@@ -3,6 +3,7 @@ package com.insta.instagram.Services;
 import com.insta.instagram.Model.Post;
 import com.insta.instagram.Model.User;
 import com.insta.instagram.Model.dto.Credential;
+import com.insta.instagram.Model.dto.PostDto;
 import com.insta.instagram.Repositroy.UserRepo;
 import com.insta.instagram.Services.utility.PasswordEncrypter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +71,14 @@ public class UserService {
         return "Post Upload Successfully";
     }
 
-    public List<Post> ShowPost(String email) {
-//        User postOwner = userRepo.findByUserEmail(email);
-        return postService.ShowPost(email);
+    public List<PostDto> showPost(String email) {
+        User user = userRepo.findByUserEmail(email);
+        user.setUserName(user.getUserName());
+        return postService.showPost(user);
     }
+
+//    public List<Post> ShowPost(String email) {
+//        User postOwner = userRepo.findByUserEmail(email);
+//        return postService.ShowPost(email);
+//    }
 }
