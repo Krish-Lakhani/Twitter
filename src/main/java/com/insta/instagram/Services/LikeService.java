@@ -23,4 +23,7 @@ public class LikeService {
         likeRepo.save(like);
         return "Twitter post liked successfully!!!";
     }
+    public Integer getLikeCountForPost(Post validPost) {
+        return likeRepo.findByTwitterPost(validPost).size();
+    }
 }

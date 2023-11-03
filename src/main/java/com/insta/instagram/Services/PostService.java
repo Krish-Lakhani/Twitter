@@ -40,4 +40,7 @@ public class PostService {
     public boolean validatePost(Post twitterPost) {
         return (twitterPost != null && postRepo.existsById(twitterPost.getPostId()));
     }
+    public Post getPostById(Integer postId) {
+        return postRepo.findById(postId).orElse(null);
+    }
 }

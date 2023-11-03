@@ -115,4 +115,16 @@ public class UserService {
             return "Cannot like on Invalid Post!!";
         }
     }
+    public String totalLike(Integer postId) {
+        Post validPost = postService.getPostById(postId);
+
+        if(validPost != null)
+        {
+            Integer likeCountForPost =  likeService.getLikeCountForPost(validPost);
+            return String.valueOf(likeCountForPost);
+        }
+        else {
+            return "Cannot like on Invalid Post!!";
+        }
+    }
 }

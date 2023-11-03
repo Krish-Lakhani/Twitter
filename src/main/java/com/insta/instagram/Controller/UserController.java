@@ -58,4 +58,9 @@ public class UserController {
     private String addLike(@RequestBody Like like, @RequestParam String likeEmail) {
         return userService.addLike(like, likeEmail);
     }
+
+    @GetMapping("totalLike/{postId}")
+    public String totalLike(@PathVariable Integer postId){
+        return userService.totalLike(postId);
+    }
 }
