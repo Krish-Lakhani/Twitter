@@ -1,8 +1,6 @@
 package com.insta.instagram.Controller;
 
-import com.insta.instagram.Model.Like;
-import com.insta.instagram.Model.Post;
-import com.insta.instagram.Model.User;
+import com.insta.instagram.Model.*;
 import com.insta.instagram.Model.dto.Credential;
 import com.insta.instagram.Model.dto.PostDto;
 import com.insta.instagram.Services.PostService;
@@ -60,11 +58,31 @@ public class UserController {
     }
 
     @GetMapping("totalLike/{postId}")
-    public String totalLike(@PathVariable Integer postId){
+    public String totalLike(@PathVariable Integer postId) {
         return userService.totalLike(postId);
     }
+
     @DeleteMapping("DeleteLike")
-    public String deleteLike(@RequestParam Integer likeId,@RequestParam String email){
-        return userService.deleteLike(likeId,email);
+    public String deleteLike(@RequestParam Integer likeId, @RequestParam String email) {
+        return userService.deleteLike(likeId, email);
+    }
+
+    @PostMapping("follow")
+    public String FollowUser(@RequestBody Follow follow, @RequestParam String followerEmail) {
+        return userService.FollowUser(follow, followerEmail);
+    }
+
+    @DeleteMapping("unfollow/{followId}")
+    public String unFollowUser(@PathVariable Integer followId, @RequestParam String followerEmail) {
+        return userService.unFollowUser(followId, followerEmail);
+    }
+
+    @PostMapping("comment")
+    public String addComment(@RequestBody Comment comment, @RequestParam String commenterEmail) {
+        return userService.addComment(comment, commenterEmail);
+    }
+    @DeleteMapping("comment")
+    public String removeComment(@RequestParam Integer commentId, @RequestParam String email) {
+        return userService.removeComment(commentId, email);
     }
 }

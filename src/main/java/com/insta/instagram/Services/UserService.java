@@ -1,8 +1,6 @@
 package com.insta.instagram.Services;
 
-import com.insta.instagram.Model.Like;
-import com.insta.instagram.Model.Post;
-import com.insta.instagram.Model.User;
+import com.insta.instagram.Model.*;
 import com.insta.instagram.Model.dto.Credential;
 import com.insta.instagram.Model.dto.PostDto;
 import com.insta.instagram.Repositroy.UserRepo;
@@ -24,9 +22,15 @@ public class UserService {
     @Autowired
     LikeService likeService;
 
+    @Autowired
+    FollowService followService;
+
+    @Autowired
+    CommentService commentService;
+
     public String SignUp(User user) throws NoSuchAlgorithmException {
 //krish
-        if (userRepo.existsByuserEmail(user.getUserEmail())){
+        if (userRepo.existsByuserEmail(user.getUserEmail())) {
             return "Already Register";
         }
         //yu
@@ -38,7 +42,7 @@ public class UserService {
     }
 
     public String SignIn(Credential credential) throws NoSuchAlgorithmException {
-        if (!userRepo.existsByuserEmail(credential.getEmail())){
+        if (!userRepo.existsByuserEmail(credential.getEmail())) {
             return "Please Create a Account";
         }
         String hashPass = PasswordEncrypter.hashPasswordWithStaticSecret(credential.getPassword());
@@ -55,10 +59,10 @@ public class UserService {
 
     public String SignOut(String email) {
         User user = userRepo.findByUserEmail(email);
-        if(user.getStatus().equals("login")){
+        if (user.getStatus().equals("login")) {
             user.setStatus("logout");
             userRepo.save(user);
-        }else {
+        } else {
             return "Please signIn first";
         }
         return "User Signed out successfully";
@@ -66,12 +70,12 @@ public class UserService {
 
     public String CreatePost(Post post, String email) {
         User user = userRepo.findByUserEmail(email);
-        if(user.getStatus().equals("login")) {
+        if (user.getStatus().equals("login")) {
             User postOwner = userRepo.findByUserEmail(email);
             post.setPostOwner(postOwner);
             postOwner.setTotal(postOwner.getTotal() + 1);
             postService.CreatePost(post);
-        }else {
+        } else {
             return "Please signIn first";
         }
         return "Post Upload Successfully";
@@ -90,10 +94,10 @@ public class UserService {
 
     public String deletePost(Integer postId, String email) {
         User user = userRepo.findByUserEmail(email);
-        if(user.getStatus().equals("login") && user.getTotal() > 0){
+        if (user.getStatus().equals("login") && user.getTotal() > 0) {
             user.setTotal(user.getTotal() - 1);
-            postService.deletePost(postId,user);
-        }else {
+            postService.deletePost(postId, user);
+        } else {
             return "Please signIn first";
         }
         return "Post Deleted Successfully";
@@ -116,33 +120,103 @@ public class UserService {
             return "Cannot like on Invalid Post!!";
         }
     }
+
     public String totalLike(Integer postId) {
         Post validPost = postService.getPostById(postId);
 
-        if(validPost != null)
-        {
-            Integer likeCountForPost =  likeService.getLikeCountForPost(validPost);
+        if (validPost != null) {
+            Integer likeCountForPost = likeService.getLikeCountForPost(validPost);
             return String.valueOf(likeCountForPost);
-        }
-        else {
+        } else {
             return "Cannot like on Invalid Post!!";
         }
     }
 
     public String deleteLike(Integer likeId, String likerEmail) {
         Like like = likeService.findLike(likeId);
-        if(like != null){
-            if(authorizeLikeRemover(likerEmail, like)){
+        if (like != null) {
+            if (authorizeLikeRemover(likerEmail, like)) {
                 likeService.removeLike(like);
                 return "like deleted successfully";
-            }else {
+            } else {
                 return "Like is already detected...Not allowed!!!!";
             }
         }
         return "Invalid like";
     }
-    private boolean authorizeLikeRemover(String likerEmail, Like like){
+
+    private boolean authorizeLikeRemover(String likerEmail, Like like) {
         String likeOwnerEmail = like.getLiker().getUserEmail();
         return likerEmail.equals(likeOwnerEmail);
+    }
+
+    public String FollowUser(Follow follow, String followerEmail) {
+        User followTargetUser = userRepo.findById(follow.getCurrentUser().getUserid()).orElse(null);
+        User follower = userRepo.findFirstByUserEmail(followerEmail);
+
+        if (followTargetUser != null) {
+            if (followService.isFollowAllowed(followTargetUser, follower)) {
+                followService.startFollowing(follow, follower);
+                return follower.getGetUserHandle() + " is now following " + followTargetUser.getGetUserHandle();
+            } else {
+                return follower.getUserHandle + " already follows " + followTargetUser.getUserHandle;
+            }
+        } else {
+            return "User to be followed is Invalid!!!";
+        }
+    }
+
+    public String unFollowUser(Integer followId, String followerEmail) {
+        Follow follow = followService.findFollow(followId);
+        if (follow != null) {
+            if (authorizeUnfollow(followerEmail, follow)) {
+                followService.unfollow(follow);
+                return follow.getCurrentUser().getGetUserHandle() + "not followed by " + followerEmail;
+            } else {
+                return "Unauthorized unfollow detected...Not allowed!!!!";
+            }
+        } else {
+            return "Invalid follow mapping";
+        }
+    }
+
+    private boolean authorizeUnfollow(String email, Follow follow) {
+        String targetEmail = follow.getCurrentUser().getUserEmail();
+        String followerEmail = follow.getUserFollower().getUserEmail();
+
+        return targetEmail.equals(email) || followerEmail.equals(email);
+    }
+
+    public String addComment(Comment comment, String commenterEmail) {
+        boolean postValid = postService.validatePost(comment.getTwitterPost());
+        if (postValid) {
+            User commenter = userRepo.findFirstByUserEmail(commenterEmail);
+            comment.setCommenter(commenter);
+            return commentService.addComment(comment);
+        } else {
+            return "Cannot comment on Invalid Post!!";
+        }
+    }
+
+    public String removeComment(Integer commentId, String email) {
+        Comment comment = commentService.findComment(commentId);
+        if (comment != null) {
+            if (authorizeCommentRemover(email, comment)) {
+                commentService.removeComment(comment);
+                return "comment deleted successfully";
+            } else {
+                return "Unauthorized delete detected...Not allowed!!!!";
+            }
+
+        } else {
+            return "Invalid Comment";
+        }
+    }
+
+    private boolean authorizeCommentRemover(String email, Comment comment) {
+        String commentOwnerEmail = comment.getCommenter().getUserEmail();
+        String postOwnerEmail = comment.getTwitterPost().getPostOwner().getUserEmail();
+
+        return postOwnerEmail.equals(email) || commentOwnerEmail.equals(email);
     }
 }
