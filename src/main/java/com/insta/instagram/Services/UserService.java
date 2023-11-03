@@ -33,6 +33,7 @@ public class UserService {
         user.setUserPassword(hashPass);
         userRepo.save(user);
         return "Register Successfully";
+
     }
 
     public String SignIn(Credential credential) throws NoSuchAlgorithmException {

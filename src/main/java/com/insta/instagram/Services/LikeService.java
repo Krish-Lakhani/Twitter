@@ -12,7 +12,6 @@ import java.util.List;
 
 @Service
 public class LikeService {
-
     @Autowired
     LikeRepo likeRepo;
     public boolean isLikeAllowedOnThisPost(Post twitterPost, User liker) {
