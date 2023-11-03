@@ -25,10 +25,11 @@ public class UserService {
     LikeService likeService;
 
     public String SignUp(User user) throws NoSuchAlgorithmException {
-
+//krish
         if (userRepo.existsByuserEmail(user.getUserEmail())){
             return "Already Register";
         }
+        //yu
         String hashPass = PasswordEncrypter.hashPasswordWithStaticSecret(user.getUserPassword());
         user.setUserPassword(hashPass);
         userRepo.save(user);
