@@ -63,4 +63,8 @@ public class UserController {
     public String totalLike(@PathVariable Integer postId){
         return userService.totalLike(postId);
     }
+    @DeleteMapping("DeleteLike")
+    public String deleteLike(@RequestParam Integer likeId,@RequestParam String email){
+        return userService.deleteLike(likeId,email);
+    }
 }

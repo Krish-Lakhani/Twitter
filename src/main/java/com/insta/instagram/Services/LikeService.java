@@ -26,4 +26,12 @@ public class LikeService {
     public Integer getLikeCountForPost(Post validPost) {
         return likeRepo.findByTwitterPost(validPost).size();
     }
+
+    public Like findLike(Integer likeId) {
+        return likeRepo.findById(likeId).orElse(null);
+    }
+
+    public void removeLike(Like like) {
+        likeRepo.delete(like);
+    }
 }

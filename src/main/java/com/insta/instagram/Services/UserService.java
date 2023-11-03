@@ -128,4 +128,21 @@ public class UserService {
             return "Cannot like on Invalid Post!!";
         }
     }
+
+    public String deleteLike(Integer likeId, String likerEmail) {
+        Like like = likeService.findLike(likeId);
+        if(like != null){
+            if(authorizeLikeRemover(likerEmail, like)){
+                likeService.removeLike(like);
+                return "like deleted successfully";
+            }else {
+                return "Like is already detected...Not allowed!!!!";
+            }
+        }
+        return "Invalid like";
+    }
+    private boolean authorizeLikeRemover(String likerEmail, Like like){
+        String likeOwnerEmail = like.getLiker().getUserEmail();
+        return likerEmail.equals(likeOwnerEmail);
+    }
 }
