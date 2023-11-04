@@ -152,7 +152,7 @@ public class UserService {
 
     public String FollowUser(Follow follow, String followerEmail) {
         User followTargetUser = userRepo.findById(follow.getCurrentUser().getUserid()).orElse(null);
-        User follower = userRepo.findFirstByUserEmail(followerEmail);
+        User follower = userRepo.findByUserEmail(followerEmail);
 
         if (followTargetUser != null) {
             if (followService.isFollowAllowed(followTargetUser, follower)) {
@@ -190,13 +190,14 @@ public class UserService {
     public String addComment(Comment comment, String commenterEmail) {
         boolean postValid = postService.validatePost(comment.getTwitterPost());
         if (postValid) {
-            User commenter = userRepo.findFirstByUserEmail(commenterEmail);
+            User commenter = userRepo.findByUserEmail(commenterEmail);
             comment.setCommenter(commenter);
             return commentService.addComment(comment);
         } else {
             return "Cannot comment on Invalid Post!!";
         }
     }
+
 
     public String removeComment(Integer commentId, String email) {
         Comment comment = commentService.findComment(commentId);

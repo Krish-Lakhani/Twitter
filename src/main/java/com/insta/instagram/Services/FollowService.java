@@ -29,7 +29,6 @@ public class FollowService {
         return followRepo.findById(followId).orElse(null);
     }
 
-
     public void unfollow(Follow follow) {
         followRepo.delete(follow);
     }
