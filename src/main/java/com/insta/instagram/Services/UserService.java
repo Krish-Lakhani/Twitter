@@ -171,7 +171,7 @@ public class UserService {
         if (follow != null) {
             if (authorizeUnfollow(followerEmail, follow)) {
                 followService.unfollow(follow);
-                return follow.getCurrentUser().getGetUserHandle() + "not followed by " + followerEmail;
+                return follow.getCurrentUser().getGetUserHandle() + " Unfollowing " + follow.getUserFollower().getGetUserHandle();
             } else {
                 return "Unauthorized unfollow detected...Not allowed!!!!";
             }

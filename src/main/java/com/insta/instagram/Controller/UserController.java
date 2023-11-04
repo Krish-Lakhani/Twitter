@@ -81,10 +81,9 @@ public class UserController {
     public String addComment(@RequestBody Comment comment, @RequestParam String commenterEmail) {
         return userService.addComment(comment, commenterEmail);
     }
-    @DeleteMapping("comment")
+    @DeleteMapping("removeComment")
     public String removeComment(@RequestParam Integer commentId, @RequestParam String email) {
         return userService.removeComment(commentId, email);
     }
 
-    // testing new branch
 }
