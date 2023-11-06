@@ -93,6 +93,7 @@ public class UserController {
 
     @PutMapping("verifyOTP")
     public String verifyOTP(@RequestParam String email,String otp,String newPassword) throws NoSuchAlgorithmException {
+
         return userService.verifyOTP(email,otp,newPassword);
     }
 }
