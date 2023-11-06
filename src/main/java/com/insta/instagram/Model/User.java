@@ -38,4 +38,5 @@ public class User {
     private String status;
 
     private int total=0;
+    private String otp;
 }

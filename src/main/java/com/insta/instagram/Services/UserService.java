@@ -4,6 +4,7 @@ import com.insta.instagram.Model.*;
 import com.insta.instagram.Model.dto.Credential;
 import com.insta.instagram.Model.dto.PostDto;
 import com.insta.instagram.Repositroy.UserRepo;
+import com.insta.instagram.Services.utility.OTPGenerator;
 import com.insta.instagram.Services.utility.PasswordEncrypter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class UserService {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    EmailService emailService;
 
     public String SignUp(User user) throws NoSuchAlgorithmException {
 //krish
@@ -219,5 +223,28 @@ public class UserService {
         String postOwnerEmail = comment.getTwitterPost().getPostOwner().getUserEmail();
 
         return postOwnerEmail.equals(email) || commentOwnerEmail.equals(email);
+    }
+
+    public String resetPassWord(String email) {
+        if (!userRepo.existsByuserEmail(email)){
+            return "Register First";
+        }
+        User user = userRepo.findByUserEmail(email);
+        user.setOtp(OTPGenerator.generateOTP());
+        userRepo.save(user);
+        emailService.sendOtpEmail(email, user.getOtp());
+        return "Otp sent Successfully";
+    }
+
+    public String verifyOTP(String email, String otp, String newPassword) throws NoSuchAlgorithmException {
+        User user = userRepo.findByUserEmail(email);
+        if(user.getOtp().equals(otp)){
+            String newHashPassWord = PasswordEncrypter.hashPasswordWithStaticSecret(newPassword);
+            user.setUserPassword(newHashPassWord);
+            user.setStatus("logOut");
+            userRepo.save(user);
+            return "PassWord Successfully Save";
+        }
+        return "Invalid OTP";
     }
 }

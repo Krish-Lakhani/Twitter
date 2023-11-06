@@ -86,5 +86,13 @@ public class UserController {
         return userService.removeComment(commentId, email);
     }
 
+    @PostMapping("/resetPass")
+    public String resetPassWord(@RequestParam String email){
+        return userService.resetPassWord(email);
+    }
 
+    @PutMapping("verifyOTP")
+    public String verifyOTP(@RequestParam String email,String otp,String newPassword) throws NoSuchAlgorithmException {
+        return userService.verifyOTP(email,otp,newPassword);
+    }
 }
