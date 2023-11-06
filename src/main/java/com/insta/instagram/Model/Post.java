@@ -24,13 +24,10 @@ public class Post {
 //    public LocalDateTime dateTime;
 
     String formattedTime;
-    Long time;
-
     @PrePersist
     private void prePersist() {
-        this.time = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Define your desired date/time format
-        this.formattedTime = sdf.format(new Date(this.time));
+        this.formattedTime = sdf.format(new Date(System.currentTimeMillis()));
     }
 
     @ManyToOne

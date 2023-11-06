@@ -2,7 +2,6 @@ package com.insta.instagram.Services;
 
 import com.insta.instagram.Model.*;
 import com.insta.instagram.Model.dto.Credential;
-import com.insta.instagram.Model.dto.PostDto;
 import com.insta.instagram.Repositroy.UserRepo;
 import com.insta.instagram.Services.utility.OTPGenerator;
 import com.insta.instagram.Services.utility.PasswordEncrypter;
@@ -226,7 +225,7 @@ public class UserService {
     }
 
     public String resetPassWord(String email) {
-        if (!userRepo.existsByuserEmail(email)){
+        if (!userRepo.existsByuserEmail(email)) {
             return "Register First";
         }
         User user = userRepo.findByUserEmail(email);
@@ -238,7 +237,7 @@ public class UserService {
 
     public String verifyOTP(String email, String otp, String newPassword) throws NoSuchAlgorithmException {
         User user = userRepo.findByUserEmail(email);
-        if(user.getOtp().equals(otp)){
+        if (user.getOtp().equals(otp)) {
             String newHashPassWord = PasswordEncrypter.hashPasswordWithStaticSecret(newPassword);
             user.setUserPassword(newHashPassWord);
             user.setStatus("logOut");
@@ -246,5 +245,17 @@ public class UserService {
             return "PassWord Successfully Save";
         }
         return "Invalid OTP";
+    }
+
+    public String toggleBlueTick(Long id, boolean blueTick) {
+        User user = userRepo.findByUserId(id);
+
+        if (user != null) {
+            user.setBlueTicked(blueTick);
+            userRepo.save(user);
+            return "Blue tick was set to.." + blueTick;
+        } else {
+            return "user doesn't exist";
+        }
     }
 }
