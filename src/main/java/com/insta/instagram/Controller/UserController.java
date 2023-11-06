@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("User")
-//@Tag(name = "Greeting", description = "Endpoints for greeting messages")
 public class UserController {
     @Autowired
     UserService userService;
@@ -86,14 +85,13 @@ public class UserController {
         return userService.removeComment(commentId, email);
     }
 
-    @PostMapping("/resetPass")
+    @PostMapping("resetPassWord")
     public String resetPassWord(@RequestParam String email){
         return userService.resetPassWord(email);
     }
 
     @PutMapping("verifyOTP")
     public String verifyOTP(@RequestParam String email,String otp,String newPassword) throws NoSuchAlgorithmException {
-
         return userService.verifyOTP(email,otp,newPassword);
     }
 }
