@@ -248,14 +248,13 @@ public class UserService {
     }
 
     public String toggleBlueTick(Long id, boolean blueTick) {
-        User user = userRepo.findByUserId(id);
+        User user = userRepo.findById(id).orElse(null);
 
         if (user != null) {
             user.setBlueTicked(blueTick);
             userRepo.save(user);
-            return "Blue tick was set to.." + blueTick;
-        } else {
-            return "user doesn't exist";
+            return "Blue tick was set..";
         }
+        return "user doesn't exist";
     }
 }

@@ -20,11 +20,8 @@ public class Admin {
     @Column(nullable = false)
     @NotEmpty
     private String userName;
-
     @Column(unique = true , nullable = false)
     @Email
     @NotBlank
     private String email;
-    private boolean blueTicked;
-
 }
