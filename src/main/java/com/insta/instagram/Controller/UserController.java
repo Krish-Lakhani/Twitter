@@ -2,8 +2,6 @@ package com.insta.instagram.Controller;
 
 import com.insta.instagram.Model.*;
 import com.insta.instagram.Model.dto.Credential;
-import com.insta.instagram.Model.dto.PostDto;
-import com.insta.instagram.Services.PostService;
 import com.insta.instagram.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +40,6 @@ public class UserController {
         return userService.ShowPost(email);
     }
 
-    //    @GetMapping("/showPost/{email}")
-//    private List<PostDto> showPost(@PathVariable String email){
-//        return userService.showPost(email);
-//    }
     @DeleteMapping("deletePost")
     public String deletePost(@RequestParam Integer postId, @RequestParam String email) {
         return userService.deletePost(postId, email);
@@ -70,7 +64,6 @@ public class UserController {
     public String FollowUser(@RequestBody Follow follow, @RequestParam String followerEmail) {
         return userService.FollowUser(follow, followerEmail);
     }
-
     @DeleteMapping("unfollow/{followId}")
     public String unFollowUser(@PathVariable Integer followId, @RequestParam String followerEmail) {
         return userService.unFollowUser(followId, followerEmail);

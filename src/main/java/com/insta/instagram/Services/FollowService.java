@@ -3,6 +3,7 @@ package com.insta.instagram.Services;
 import com.insta.instagram.Model.Follow;
 import com.insta.instagram.Model.User;
 import com.insta.instagram.Repositroy.FollowRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,8 @@ import java.util.List;
 
 @Service
 public class FollowService {
-
     @Autowired
     FollowRepo followRepo;
-
     public boolean isFollowAllowed(User followTargetUser, User follower) {
         List<Follow> followList = followRepo.findByCurrentUserAndUserFollower(followTargetUser,follower);
 

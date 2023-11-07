@@ -32,7 +32,6 @@ public class UserService {
     EmailService emailService;
 
     public String SignUp(User user) throws NoSuchAlgorithmException {
-//krish
         if (userRepo.existsByuserEmail(user.getUserEmail())) {
             return "Already Register";
         }
@@ -83,12 +82,6 @@ public class UserService {
         }
         return "Post Upload Successfully";
     }
-
-//    public List<PostDto> showPost(String email) {
-//        User user = userRepo.findByUserEmail(email);
-//        user.setUserName(user.getUserName());
-//        return postService.showPost(user);
-//    }
 
     public List<Post> ShowPost(String email) {
         User postOwner = userRepo.findByUserEmail(email);
@@ -168,7 +161,6 @@ public class UserService {
             return "User to be followed is Invalid!!!";
         }
     }
-
     public String unFollowUser(Integer followId, String followerEmail) {
         Follow follow = followService.findFollow(followId);
         if (follow != null) {
@@ -200,8 +192,6 @@ public class UserService {
             return "Cannot comment on Invalid Post!!";
         }
     }
-
-
     public String removeComment(Integer commentId, String email) {
         Comment comment = commentService.findComment(commentId);
         if (comment != null) {
