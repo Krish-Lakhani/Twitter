@@ -23,11 +23,11 @@ public class Post {
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 //    public LocalDateTime dateTime;
 
-    String formattedTime;
+    public String time;
     @PrePersist
     private void prePersist() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Define your desired date/time format
-        this.formattedTime = sdf.format(new Date(System.currentTimeMillis()));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Define your desired date/time format
+        this.time = sdf.format(new Date(System.currentTimeMillis()));
     }
 
     @ManyToOne
