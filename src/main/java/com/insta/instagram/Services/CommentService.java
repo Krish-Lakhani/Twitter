@@ -26,7 +26,7 @@ public class CommentService {
     }
 
     public String addComment(Comment comment) {
-        comment.setFormattedTime(comment.getFormattedTime());
+        comment.setTime(comment.getTime());
         commentRepo.save(comment);
         return "Comment has been added!!!";
     }

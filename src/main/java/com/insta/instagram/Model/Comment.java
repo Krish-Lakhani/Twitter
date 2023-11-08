@@ -33,11 +33,12 @@ public class Comment {
     @JoinColumn(name = "fk_commenter_id")
     private User commenter;
 
-    String formattedTime;
+    public String time;
 
     @PrePersist
     private void prePersist() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Define your desired date/time format
-        this.formattedTime = sdf.format(new Date(System.currentTimeMillis()));
+        this.time = sdf.format(new Date(System.currentTimeMillis()));
     }
+
 }
