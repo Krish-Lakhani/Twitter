@@ -3,6 +3,8 @@ package com.insta.instagram.Services;
 import com.insta.instagram.Model.*;
 import com.insta.instagram.Model.dto.Credential;
 import com.insta.instagram.Model.dto.PostDto;
+import com.insta.instagram.Repositroy.AdminRepo;
+import com.insta.instagram.Repositroy.PostRepo;
 import com.insta.instagram.Repositroy.UserRepo;
 import com.insta.instagram.Services.utility.OTPGenerator;
 import com.insta.instagram.Services.utility.PasswordEncrypter;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -32,12 +35,18 @@ public class UserService {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    PostRepo postRepo;
+
+    @Autowired
+    AdminRepo adminRepo;
+
     public String SignUp(User user) throws NoSuchAlgorithmException {
-//krish
+
         if (userRepo.existsByuserEmail(user.getUserEmail())) {
             return "Already Register";
         }
-        //yu
+
         String hashPass = PasswordEncrypter.hashPasswordWithStaticSecret(user.getUserPassword());
         user.setUserPassword(hashPass);
         userRepo.save(user);
@@ -85,17 +94,6 @@ public class UserService {
         return "Post Upload Successfully";
     }
 
-//    public List<PostDto> showPost(String email) {
-//        User user = userRepo.findByUserEmail(email);
-//        user.setUserName(user.getUserName());
-//        return postService.showPost(user);
-//    }
-
-    public List<Post> ShowPost(String email) {
-        User postOwner = userRepo.findByUserEmail(email);
-        return postService.ShowPost(email);
-    }
-
     public String deletePost(Integer postId, String email) {
         User user = userRepo.findByUserEmail(email);
         if (user.getStatus().equals("login") && user.getTotal() > 0) {
@@ -133,6 +131,17 @@ public class UserService {
             return String.valueOf(likeCountForPost);
         } else {
             return "Cannot like on Invalid Post!!";
+        }
+    }
+
+    public String totalComment(Integer postId) {
+        Post validPost = postService.getPostById(postId);
+
+        if (validPost != null) {
+            Integer CommentCountForPost = commentService.getCommentCountForPost(validPost);
+            return String.valueOf(CommentCountForPost);
+        } else {
+            return "Cannot Comment on Invalid Post!!";
         }
     }
 
@@ -226,7 +235,7 @@ public class UserService {
     }
 
     public String resetPassWord(String email) {
-        if (!userRepo.existsByuserEmail(email)){
+        if (!userRepo.existsByuserEmail(email)) {
             return "Register First";
         }
         User user = userRepo.findByUserEmail(email);
@@ -238,7 +247,7 @@ public class UserService {
 
     public String verifyOTP(String email, String otp, String newPassword) throws NoSuchAlgorithmException {
         User user = userRepo.findByUserEmail(email);
-        if(user.getOtp().equals(otp)){
+        if (user.getOtp().equals(otp)) {
             String newHashPassWord = PasswordEncrypter.hashPasswordWithStaticSecret(newPassword);
             user.setUserPassword(newHashPassWord);
             user.setStatus("logOut");
@@ -246,5 +255,33 @@ public class UserService {
             return "PassWord Successfully Save";
         }
         return "Invalid OTP";
+    }
+
+    public List<PostDto> showPost(String email) {
+        List<Post> posts = postRepo.findByPostOwnerUserEmail(email);
+        return posts.stream().map(post -> new PostDto(post.getTitle(), post.getDescription(), post.getUrl(), post.getTime(), post.getPostOwner().getUserName())).collect(Collectors.toList());
+    }
+
+    public User getUserById(Long userId) {
+        return userRepo.findById(userId).orElse(null);
+    }
+
+    public String toggleBlueTick(Long id, boolean blueTick) {
+        User user = userRepo.findById(id).orElse(null);
+        Admin admin = new Admin();
+
+        if (user != null && blueTick == true) {
+            user.setIsBlueTicked("✅");
+            admin.setEmail(user.getUserEmail());
+            admin.setUserName(user.getUserName());
+            adminRepo.save(admin);
+            userRepo.save(user);
+            return "Blue tick was set..";
+        } else if (user != null && blueTick == false) {
+            user.setIsBlueTicked("Not Verified");
+            userRepo.save(user);
+            return "Blue tick was not set..";
+        }
+        return "user doesn't exist";
     }
 }

@@ -1,5 +1,6 @@
 package com.insta.instagram.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.insta.instagram.Model.Enum.AccountType;
 import com.insta.instagram.Model.Enum.Gender;
 import jakarta.persistence.*;
@@ -39,4 +40,7 @@ public class User {
 
     private int total=0;
     private String otp;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String isBlueTicked;
 }
