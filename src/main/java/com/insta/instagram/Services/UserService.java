@@ -3,6 +3,7 @@ package com.insta.instagram.Services;
 import com.insta.instagram.Model.*;
 import com.insta.instagram.Model.dto.Credential;
 import com.insta.instagram.Model.dto.PostDto;
+import com.insta.instagram.Repositroy.PostRepo;
 import com.insta.instagram.Repositroy.UserRepo;
 import com.insta.instagram.Services.utility.OTPGenerator;
 import com.insta.instagram.Services.utility.PasswordEncrypter;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -31,6 +33,9 @@ public class UserService {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    PostRepo postRepo;
 
     public String SignUp(User user) throws NoSuchAlgorithmException {
 //krish
@@ -85,17 +90,6 @@ public class UserService {
         return "Post Upload Successfully";
     }
 
-//    public List<PostDto> showPost(String email) {
-//        User user = userRepo.findByUserEmail(email);
-//        user.setUserName(user.getUserName());
-//        return postService.showPost(user);
-//    }
-
-    public List<Post> ShowPost(String email) {
-        User postOwner = userRepo.findByUserEmail(email);
-        return postService.ShowPost(email);
-    }
-
     public String deletePost(Integer postId, String email) {
         User user = userRepo.findByUserEmail(email);
         if (user.getStatus().equals("login") && user.getTotal() > 0) {
@@ -133,6 +127,17 @@ public class UserService {
             return String.valueOf(likeCountForPost);
         } else {
             return "Cannot like on Invalid Post!!";
+        }
+    }
+
+    public String totalComment(Integer postId) {
+        Post validPost = postService.getPostById(postId);
+
+        if (validPost != null) {
+            Integer CommentCountForPost = commentService.getCommentCountForPost(validPost);
+            return String.valueOf(CommentCountForPost);
+        } else {
+            return "Cannot Comment on Invalid Post!!";
         }
     }
 
@@ -246,5 +251,17 @@ public class UserService {
             return "PassWord Successfully Save";
         }
         return "Invalid OTP";
+    }
+
+    public List<PostDto> showPost(String email) {
+        List<Post> posts = postRepo.findByPostOwnerUserEmail(email);
+        return posts.stream()
+                .map(post -> new PostDto(post.getTitle(), post.getDescription(), post.getUrl(), post.getFormattedTime(), post.getPostOwner().getUserName()))
+                .collect(Collectors.toList());
+    }
+
+
+    public User getUserById(Long userId) {
+        return userRepo.findById(userId).orElse(null);
     }
 }

@@ -7,8 +7,8 @@ import com.insta.instagram.Repositroy.PostRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -20,13 +20,6 @@ public class PostService {
         return postRepo.save(post);
     }
 
-//    public List<PostDto> showPost(User user) {
-//        return postRepo.getPostsByPostOwner(user);
-//    }
-
-    public List<Post> ShowPost(String userEmail) {
-        return postRepo.findByPostOwnerUserEmail(userEmail);
-    }
 
     public String deletePost(Integer postId, User user) {
         Post post = postRepo.findById(postId).orElse(null);
@@ -43,4 +36,6 @@ public class PostService {
     public Post getPostById(Integer postId) {
         return postRepo.findById(postId).orElse(null);
     }
+
+
 }

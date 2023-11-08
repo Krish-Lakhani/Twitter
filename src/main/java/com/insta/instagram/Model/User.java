@@ -39,4 +39,5 @@ public class User {
 
     private int total=0;
     private String otp;
+
 }
