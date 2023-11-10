@@ -110,7 +110,7 @@ The project follows a standard Spring Boot MVC structure and consists of the fol
 1. Clone the repository to your local machine:
 
    ```shell
-      git clone https://github.com/your-username/twitter-clone.git
+      git clone https://github.com/Krish-Lakhani/Twitter.git
 2. *Set up the required database (MySQL) and configure the database connection* in the `application.properties` file, and also you have to set up SMTP for email OTP.
 
 3. *Build and run the application* using Maven or your preferred IDE.
